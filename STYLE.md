@@ -23,7 +23,7 @@ Typical targets:
 ### Unicode
 
 Non-ASCII characters are welcome in documentation, comments, and even variable
-names where they improve clarity---for example, en dashes, em dashes, Greek
+names where they improve clarity—for example, en dashes, em dashes, Greek
 letters (`θ`, `λ`), and mathematical symbols. Use emoji sparingly.
 
 ### Version policy
@@ -31,11 +31,26 @@ letters (`θ`, `λ`), and mathematical symbols. Use emoji sparingly.
 Always use the latest stable version of languages, tools, and dependencies.
 Do not pin to older versions without a specific, documented reason.
 
+## Git
+
+### Commit messages
+
+Write commit messages in the imperative mood. Keep the subject line to fifty
+characters or fewer. If a body is needed, separate it from the subject with a
+blank line and wrap at seventy-two characters. The subject should explain *why*
+the change was made, not *what* changed—the diff already shows that. Follow the
+conventions in the [English](#english) section for prose style.
+
 ## Languages
 
-- [Python](python.md) --- uv, Ruff, ty
-- [Go](go.md) --- `go tool`, gofumpt, golangci-lint
-- [TypeScript/JavaScript](typescript.md) --- Bun, ESLint, typescript-eslint
+- [Python](python.md) — uv, Ruff, ty
+- [Go](go.md) — `go tool`, gofumpt, golangci-lint
+- [TypeScript/JavaScript](typescript.md) — Bun, ESLint, typescript-eslint
+
+## Containers
+
+See [containers.md](containers.md) for container image conventions, including
+Distroless base images and ko for Go.
 
 ## English
 
@@ -45,7 +60,7 @@ prose, documentation, and commit messages. Notable conventions:
 - Use the serial (Oxford) comma.
 - Titles and headings use sentence case, not title case.
 - Spell out numbers under 100 in running text.
-- Use an em dash (---) without surrounding spaces.
+- Use an em dash (—) without surrounding spaces.
 - Prefer active voice.
 
 ## Markdown

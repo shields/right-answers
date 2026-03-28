@@ -13,36 +13,14 @@ All projects must use ESM (`"type": "module"` in `package.json`).
 Use TypeScript in type-checking-only mode (`noEmit: true`). Enable
 `erasableSyntaxOnly` for compatibility with Node.js native type stripping.
 
-Enable all strict checks and then some:
+A shared [`tsconfig.json`](tsconfig.json) is provided in this repository. Enable
+all strict checks and then some. Key flags beyond `strict`:
 
-```jsonc
-{
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "erasableSyntaxOnly": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
-  }
-}
-```
-
-Key flags beyond `strict`:
-
-- **`noUncheckedIndexedAccess`** --- index signatures return `T | undefined`,
+- **`noUncheckedIndexedAccess`** — index signatures return `T | undefined`,
   catching a common class of runtime errors.
-- **`exactOptionalPropertyTypes`** --- distinguishes between a missing property
+- **`exactOptionalPropertyTypes`** — distinguishes between a missing property
   and one explicitly set to `undefined`.
-- **`erasableSyntaxOnly`** --- ensures the code runs under Node.js type
+- **`erasableSyntaxOnly`** — ensures the code runs under Node.js type
   stripping without a build step.
 
 ## Linting
@@ -57,51 +35,62 @@ Enable the strictest type-checked rule sets:
 - `tseslint.configs.stylisticTypeChecked`
 - `unicorn.configs.unopinionated`
 
-Require `eqeqeq`.
+Require `eqeqeq`. A shared [`eslint.config.ts`](eslint.config.ts) is provided
+in this repository. It includes
+[eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) as
+the final config entry to disable rules that conflict with Prettier.
 
-Starter `eslint.config.ts`:
+## Formatting
 
-```ts
-import eslint from "@eslint/js";
-import unicorn from "eslint-plugin-unicorn";
-import tseslint from "typescript-eslint";
-
-export default tseslint.config(
-  { ignores: ["node_modules/"] },
-  eslint.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
-  unicorn.configs.unopinionated,
-  {
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-    rules: {
-      eqeqeq: "error",
-    },
-  },
-);
-```
+Use [Prettier](https://prettier.io/) for code formatting. Prettier's defaults
+are intentionally adopted with minimal overrides—this aligns with the
+"opinionated defaults" philosophy used across all language guides.
 
 ## Testing
 
-Use `bun test` with 100% coverage thresholds. Configure in `bunfig.toml`:
+Use `bun test` with 100% coverage thresholds. A shared
+[`bunfig.toml`](bunfig.toml) is provided in this repository.
 
-```toml
-[test]
-coverageThreshold = { lines = 1.0, functions = 1.0, statements = 1.0 }
+## Error handling
+
+Prefer typed error classes extending `Error` with a `cause` property for
+wrapping:
+
+```ts
+class AppError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+    this.name = "AppError";
+  }
+}
+
+throw new AppError("failed to process", { cause: err });
+```
+
+Use `unknown` in catch clauses (enforced by `strict`) and narrow before
+accessing properties. Do not use exceptions for control flow.
+
+## Logging
+
+Use [pino](https://getpino.io/) for structured logging:
+
+```ts
+import pino from "pino";
+
+const log = pino();
+log.info({ method: req.method, path: req.url }, "request handled");
 ```
 
 ## Makefile example
 
 ```makefile
-.PHONY: lint check test
+.PHONY: lint fmt check test
 
 lint:
 	bun run lint
+
+fmt:
+	bunx prettier --write .
 
 check:
 	tsc
