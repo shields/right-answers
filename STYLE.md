@@ -35,11 +35,9 @@ Do not pin to older versions without a specific, documented reason.
 
 ### Commit messages
 
-Write commit messages in the imperative mood. Keep the subject line to fifty
-characters or fewer. If a body is needed, separate it from the subject with a
-blank line and wrap at seventy-two characters. The subject should explain *why*
-the change was made, not *what* changed—the diff already shows that. Follow the
-conventions in the [English](#english) section for prose style.
+Do not use Conventional Commits prefixes (`fix:`, `feat:`, `chore:`, etc.).
+Write plain imperative sentences. Follow the conventions in the
+[English](#english) section for prose style.
 
 ## Languages
 
@@ -61,7 +59,6 @@ prose, documentation, and commit messages. Notable conventions:
 - Titles and headings use sentence case, not title case.
 - Spell out numbers under 100 in running text.
 - Use an em dash (—) without surrounding spaces.
-- Prefer active voice.
 
 ## Markdown
 
@@ -78,9 +75,3 @@ graph LR
     B --> C[Output]
 ```
 ````
-
-### Formatting
-
-- Use ATX-style headings (`#`, not underlines).
-- Use fenced code blocks with a language identifier.
-- Wrap prose at a reasonable line length for readable diffs.

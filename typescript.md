@@ -6,8 +6,6 @@ Use [Bun](https://bun.sh/) as the package manager and test runner. Use
 `bun install` and `bun.lock` for dependency management. Do not use npm, yarn,
 or pnpm.
 
-All projects must use ESM (`"type": "module"` in `package.json`).
-
 ## TypeScript configuration
 
 Use TypeScript in type-checking-only mode (`noEmit: true`). Enable
@@ -51,25 +49,6 @@ are intentionally adopted with minimal overrides—this aligns with the
 Use `bun test` with 100% coverage thresholds. A shared
 [`bunfig.toml`](bunfig.toml) is provided in this repository.
 
-## Error handling
-
-Prefer typed error classes extending `Error` with a `cause` property for
-wrapping:
-
-```ts
-class AppError extends Error {
-  constructor(message: string, options?: ErrorOptions) {
-    super(message, options);
-    this.name = "AppError";
-  }
-}
-
-throw new AppError("failed to process", { cause: err });
-```
-
-Use `unknown` in catch clauses (enforced by `strict`) and narrow before
-accessing properties. Do not use exceptions for control flow.
-
 ## Logging
 
 Use [pino](https://getpino.io/) for structured logging:
@@ -79,22 +58,4 @@ import pino from "pino";
 
 const log = pino();
 log.info({ method: req.method, path: req.url }, "request handled");
-```
-
-## Makefile example
-
-```makefile
-.PHONY: lint fmt check test
-
-lint:
-	bun run lint
-
-fmt:
-	bunx prettier --write .
-
-check:
-	tsc
-
-test:
-	bun test --coverage
 ```
