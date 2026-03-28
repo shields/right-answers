@@ -1,0 +1,35 @@
+# Copyright © 2023 Michael Shields
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Target Python 3.14+ for maximum modernization
+target-version = "py314"
+
+[lint]
+# https://docs.astral.sh/ruff/rules/
+select = [
+  "ALL",
+]
+
+ignore = [
+  "ANN401",  # typing.Any
+  "C90",     # Cyclomatic complexity
+  "D",       # pydocstyle (disable docstring rules)
+  "PLR09",   # "Too many" branches, arguments, etc.
+  "S603",    # subprocess output
+  "S607",    # subprocess using path
+  "T201",    # print()
+  "RUF001",  # ambiguous Unicode character in string
+  "RUF002",  # ambiguous Unicode character in docstring
+  "RUF003",  # ambiguous Unicode character in comment
+]
