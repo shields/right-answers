@@ -25,10 +25,10 @@ FROM gcr.io/distroless/static-debian13:nonroot@sha256:<digest>
 
 ## Building Go containers
 
-Use [ko](https://ko.build/) for building Go container images. ko builds
-directly from `go build`, produces SBOMs, and requires no Dockerfile. It
-defaults to a Distroless base image when `CGO_ENABLED=0`, which is the
-preferred configuration.
+Use [ko](https://ko.build/) for building Go container images. ko builds directly
+from `go build`, produces SBOMs, and requires no Dockerfile. It defaults to a
+Distroless base image when `CGO_ENABLED=0`, which is the preferred
+configuration.
 
 To explicitly set the base image, add a `.ko.yaml` at the project root:
 

@@ -28,8 +28,8 @@ letters (`θ`, `λ`), and mathematical symbols. Use emoji sparingly.
 
 ### Version policy
 
-Always use the latest stable version of languages, tools, and dependencies.
-Do not pin to older versions without a specific, documented reason.
+Always use the latest stable version of languages, tools, and dependencies. Do
+not pin to older versions without a specific, documented reason.
 
 ## Git
 
@@ -61,6 +61,10 @@ prose, documentation, and commit messages. Notable conventions:
 - Use an em dash (—) without surrounding spaces.
 
 ## Markdown
+
+### Formatting
+
+Use [Prettier](https://prettier.io/) to format Markdown files.
 
 ### Diagrams
 

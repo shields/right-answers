@@ -3,8 +3,8 @@
 ## Tooling
 
 Use [Bun](https://bun.sh/) as the package manager and test runner. Use
-`bun install` and `bun.lock` for dependency management. Do not use npm, yarn,
-or pnpm.
+`bun install` and `bun.lock` for dependency management. Do not use npm, yarn, or
+pnpm.
 
 ## TypeScript configuration
 
@@ -18,8 +18,8 @@ all strict checks and then some. Key flags beyond `strict`:
   catching a common class of runtime errors.
 - **`exactOptionalPropertyTypes`** — distinguishes between a missing property
   and one explicitly set to `undefined`.
-- **`erasableSyntaxOnly`** — ensures the code runs under Node.js type
-  stripping without a build step.
+- **`erasableSyntaxOnly`** — ensures the code runs under Node.js type stripping
+  without a build step.
 
 ## Linting
 
@@ -33,8 +33,8 @@ Enable the strictest type-checked rule sets:
 - `tseslint.configs.stylisticTypeChecked`
 - `unicorn.configs.unopinionated`
 
-Require `eqeqeq`. A shared [`eslint.config.ts`](eslint.config.ts) is provided
-in this repository. It includes
+Require `eqeqeq`. A shared [`eslint.config.ts`](eslint.config.ts) is provided in
+this repository. It includes
 [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) as
 the final config entry to disable rules that conflict with Prettier.
 
