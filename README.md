@@ -59,6 +59,7 @@ prose, documentation, and commit messages. Notable conventions:
 - Titles and headings use sentence case, not title case.
 - Spell out numbers under 100 in running text.
 - Use an em dash (—) without surrounding spaces.
+- Write "Wi-Fi", not "WiFi".
 
 ## Markdown
 
