@@ -3,6 +3,12 @@
 This repository documents shared conventions used across projects. Individual
 repositories should reference this as the canonical source.
 
+## Agents
+
+Agent instructions live in `AGENTS.md`. `CLAUDE.md` is a symlink to it until
+Claude Code supports `AGENTS.md` natively
+([anthropics/claude-code#6235](https://github.com/anthropics/claude-code/issues/6235)).
+
 ## General
 
 ### Makefiles
