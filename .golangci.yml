@@ -45,8 +45,12 @@ linters:
     - testpackage # Tests in same package are fine
     - noctx # Not all functions need context
     - noinlineerr # Inline errors are often clearer
+    - nonamedreturns # Named returns aid clarity; nakedret covers the bug risk
 
   settings:
+    funcorder:
+      struct-method: false # Allow placing helper methods near callers
+
     dupl:
       threshold: 150
 
@@ -101,9 +105,23 @@ linters:
           disabled: true
         - name: file-header
           disabled: true
+        - name: unhandled-error
+          disabled: true # Subset of errcheck
 
     staticcheck:
       checks: ["all"]
+
+  # Test HTTP handlers, cleanup functions, and table-driven literals do not
+  # benefit from error checking and security scanning, and test error values
+  # do not need to be sentinel errors.
+  exclusions:
+    rules:
+      - path: _test\.go$
+        linters:
+          - errcheck
+          - err113
+          - gosec
+          - goconst
 
 issues:
   max-issues-per-linter: 0
