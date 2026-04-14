@@ -51,6 +51,10 @@ Write plain imperative sentences. Follow the conventions in the
 - [Go](go.md) — `go tool`, gofumpt, golangci-lint
 - [TypeScript/JavaScript](typescript.md) — Bun, ESLint, typescript-eslint
 
+## CI
+
+See [ci.md](ci.md) for GitHub Actions and Renovate conventions.
+
 ## Containers
 
 See [containers.md](containers.md) for container image conventions, including
