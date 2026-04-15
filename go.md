@@ -6,6 +6,19 @@ Use the latest stable version of Go. Take advantage of
 [`go tool`](https://go.dev/doc/modules/managing-tools) for managing
 project-specific tool dependencies rather than installing tools globally.
 
+## CI
+
+Runners already include Go, but
+[`actions/setup-go`](https://github.com/actions/setup-go) adds caching
+for downloaded modules and compiled packages. Use `go-version-file`
+rather than hardcoding a version:
+
+```yaml
+- uses: actions/setup-go
+  with:
+    go-version-file: go.mod
+```
+
 ## Linting and formatting
 
 Use [gofumpt](https://github.com/mvdan/gofumpt) for formatting (a stricter
