@@ -18,8 +18,7 @@ Use [ty](https://docs.astral.sh/ty/) for type checking.
 
 ## Error handling
 
-Define custom exceptions inheriting from a project-level base exception, which
-itself inherits from `Exception` (not `BaseException`).
+Inherit project exceptions from `Exception`, not `BaseException`.
 
 ## Logging
 

@@ -15,8 +15,7 @@ Claude Code supports `AGENTS.md` natively
 
 Every project should have a `Makefile` as the standard entry point for common
 tasks: building, testing, linting, formatting, and running. Prefer `make`
-targets over documenting raw commands. This gives contributors a single
-interface regardless of the underlying toolchain.
+targets over documenting raw commands.
 
 Typical targets:
 
@@ -36,8 +35,6 @@ letters (`θ`, `λ`), and mathematical symbols. Use emoji sparingly.
 
 Always use the latest stable version of languages, tools, and dependencies. Do
 not pin to older versions without a specific, documented reason.
-
-## Git
 
 ### Commit messages
 
@@ -80,8 +77,7 @@ Use [Prettier](https://prettier.io/) to format Markdown files.
 ### Diagrams
 
 Use [Mermaid](https://mermaid.js.org/) for diagrams instead of ASCII art.
-Mermaid renders natively on GitHub and in most documentation tools, and is far
-easier to maintain than hand-drawn text diagrams.
+Mermaid renders natively on GitHub and in most documentation tools.
 
 ````markdown
 ```mermaid

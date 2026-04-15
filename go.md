@@ -2,16 +2,15 @@
 
 ## Tooling
 
-Use the latest stable version of Go. Take advantage of
-[`go tool`](https://go.dev/doc/modules/managing-tools) for managing
+Use [`go tool`](https://go.dev/doc/modules/managing-tools) to manage
 project-specific tool dependencies rather than installing tools globally.
 
 ## CI
 
 Runners already include Go, but
-[`actions/setup-go`](https://github.com/actions/setup-go) adds caching
-for downloaded modules and compiled packages. Use `go-version-file`
-rather than hardcoding a version:
+[`actions/setup-go`](https://github.com/actions/setup-go) adds caching for
+downloaded modules and compiled packages. Use `go-version-file` rather than
+hardcoding a version:
 
 ```yaml
 - uses: actions/setup-go
@@ -30,10 +29,10 @@ configuration enables all linters by default with a curated set of exclusions.
 
 ## Test coverage
 
-`go tool cover -func` undercounts: it parses the AST for `*ast.FuncDecl`
-nodes, so statements inside package-level function literals
-(`var x = func() { ... }()`) are excluded from the total. Parse the
-profile directly instead:
+`go tool cover -func` undercounts coverage. It only counts top-level function
+declarations (`*ast.FuncDecl`), so statements inside package-level function
+literals (`var x = func() { ... }()`) are excluded. Parse the profile directly
+instead:
 
 ```makefile
 @LC_ALL=C awk 'NR>1{t+=$$2;if($$3>0)c+=$$2} \
@@ -41,12 +40,12 @@ profile directly instead:
   if(c!=t){print "FAIL: coverage is not 100.0%";exit 1}}' $(COVERAGE_FILE)
 ```
 
-`LC_ALL=C` prevents locale-dependent decimal separators. `c!=t` compares
-integer statement counts rather than the formatted string, which avoids
-`printf` rounding 99.95% up to `100.0%`.
+`LC_ALL=C` prevents locale-dependent decimal separators. `c!=t` compares integer
+statement counts rather than the formatted string, which avoids `printf`
+rounding 99.95% up to `100.0%`.
 
-To make init-time function literals coverable, extract them into named
-functions with injectable dependencies so tests can mock the error paths.
+To make init-time function literals coverable, extract them into named functions
+with injectable dependencies so tests can mock the error paths.
 
 ## Logging
 

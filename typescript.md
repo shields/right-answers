@@ -8,8 +8,7 @@ pnpm.
 
 ## TypeScript configuration
 
-Use TypeScript in type-checking-only mode (`noEmit: true`). Enable
-`erasableSyntaxOnly` for compatibility with Node.js native type stripping.
+Use TypeScript in type-checking-only mode (`noEmit: true`).
 
 A shared [`tsconfig.json`](tsconfig.json) is provided in this repository. Enable
 all strict checks and then some. Key flags beyond `strict`:
@@ -41,8 +40,7 @@ the final config entry to disable rules that conflict with Prettier.
 ## Formatting
 
 Use [Prettier](https://prettier.io/) for code formatting. Prettier's defaults
-are intentionally adopted with minimal overrides—this aligns with the
-"opinionated defaults" philosophy used across all language guides.
+are intentionally adopted with minimal overrides.
 
 ## Testing
 
