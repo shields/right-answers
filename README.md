@@ -47,6 +47,7 @@ Write plain imperative sentences. Follow the conventions in the
 - [Python](python.md) — uv, Ruff, ty
 - [Go](go.md) — `go tool`, gofumpt, golangci-lint
 - [Rust](rust.md) — edition 2024, strict Clippy, llvm-cov
+- [Swift](swift.md) — Swift 6.3, SwiftPM, swift-format, Swift Testing
 - [TypeScript/JavaScript](typescript.md) — Bun, ESLint, typescript-eslint
 
 ## CI
