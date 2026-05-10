@@ -37,6 +37,46 @@ Workflows should call Make targets (`make lint`, `make coverage`), not raw tool
 commands. This keeps CI configuration minimal and ensures local dev is identical
 to CI.
 
+### Permissions
+
+Set workflow-level `permissions: contents: read` and elevate per-job only where
+needed. Job-level permissions apply to every step in that job, so a job that
+runs `make test` while also holding `contents: write` lets any transitive lint
+or test dependency push to the repo via `GITHUB_TOKEN`. A typical Go linter
+pulls in hundreds of indirect modules—that's not a defensible trust boundary.
+
+Split by privilege: a `test` job at `contents: read` runs lint and tests; a
+dependent `build` job at `contents: write` runs only compiled tools
+(`go tool ko`, `docker/login-action`, etc.) whose code is pinned in `go.mod` or
+by SHA.
+
+<!-- prettier-ignore -->
+```yaml
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@... # vX.Y.Z
+      - run: make lint
+      - run: make test
+
+  build:
+    needs: test
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@... # vX.Y.Z
+      - run: # publish images, push tags, etc.
+```
+
+The same principle applies to `id-token: write` (OIDC), `pull-requests: write`,
+and any other elevation: scope it to the job that needs it, never the workflow.
+
 ## Renovate
 
 Use [Renovate](https://docs.renovatebot.com/) rather than Dependabot. Renovate
