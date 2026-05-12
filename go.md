@@ -27,6 +27,14 @@ Use [golangci-lint v2](https://golangci-lint.run/) for linting. A shared
 [`.golangci.yml`](.golangci.yml) is provided in this repository. The
 configuration enables all linters by default with a curated set of exclusions.
 
+Test files are exempt from linters whose output is mostly noise in tests:
+
+- `goconst` via the dedicated `goconst.ignore-tests: true` setting (added in
+  golangci-lint v2.12.0) — keeps test fixtures like repeated `"main.go"` from
+  flagging.
+- `errcheck`, `err113`, and `gosec` via a `_test\.go$` path rule under
+  `issues.exclusions.rules`.
+
 ## Test coverage
 
 `go tool cover -func` undercounts coverage. It only counts top-level function
