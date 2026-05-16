@@ -1,6 +1,7 @@
 # Rust
 
-Use **edition 2024**. For simple CLIs, parse arguments manually rather than using `clap`.
+Use **edition 2024**. For simple CLIs, parse arguments manually rather than
+using `clap`.
 
 ## Linting
 

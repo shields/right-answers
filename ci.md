@@ -115,5 +115,5 @@ Key choices:
   required checks, rather than Renovate's branch-based approach.
 
 For Go projects, add `postUpdateOptions: ["gomodTidy"]` so dep updates
-regenerate `go.sum`; otherwise tool bumps leave it missing `h1:` hashes for
-new transitive deps. Casing matters: `goModTidy` is silently ignored.
+regenerate `go.sum`; otherwise tool bumps leave it missing `h1:` hashes for new
+transitive deps. Casing matters: `goModTidy` is silently ignored.

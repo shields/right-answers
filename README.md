@@ -25,6 +25,25 @@ Typical targets:
 - `make fmt`
 - `make run`
 
+`make lint` and `make fmt` should cover everything in the project, including
+non-code files like Markdown.
+
+### Git hooks
+
+Use [Lefthook](https://lefthook.dev/) for git hooks. Single Go binary, no
+runtime dependency. The convention is one hook, one command:
+
+```yaml
+pre-commit:
+  commands:
+    lint:
+      run: make lint
+```
+
+All format and lint logic lives in the Makefile, so local commits and CI run the
+same command. If `make lint` fails, run `make fmt` and re-stage. Don't pass
+`--no-verify`.
+
 ### Unicode
 
 Non-ASCII characters are welcome in documentation, comments, and even variable

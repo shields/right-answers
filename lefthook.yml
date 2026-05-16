@@ -1,5 +1,4 @@
 pre-commit:
   commands:
-    prettier:
-      glob: "*.md"
-      run: bunx prettier --write {staged_files} && git add {staged_files}
+    lint:
+      run: make lint
