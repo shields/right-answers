@@ -3,6 +3,21 @@
 Use **edition 2024**. For simple CLIs, parse arguments manually rather than
 using `clap`.
 
+## Toolchain
+
+Pin the latest stable Rust release in `rust-toolchain.toml` (look it up
+fresh—don't guess from memory):
+
+```toml
+[toolchain]
+channel = "1.95.0"
+components = ["clippy", "rustfmt"]
+profile = "minimal"
+```
+
+Both local `cargo` and CI pick this up automatically. Renovate updates the
+channel like action SHAs.
+
 ## Linting
 
 Deny all Clippy lint groups, including `nursery` and `cargo`:
