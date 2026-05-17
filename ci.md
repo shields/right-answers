@@ -13,6 +13,15 @@ Pin actions by SHA digest with a version comment:
 Tags are mutable—a digest guarantees the exact code you reviewed. Renovate
 updates these automatically.
 
+### Action sources
+
+Prefer GitHub-owned actions (`actions/*`) or inline shell over third-party
+actions maintained by individuals, even popular ones like
+`dtolnay/rust-toolchain` or `Swatinem/rust-cache`. SHA-pinning protects against
+tag mutation but doesn't help if you trust the wrong maintainer in the first
+place. Toolchains (Rust, Go, Node, Python) are preinstalled on the runner;
+reach for a third-party action only when there's no reasonable alternative.
+
 ### Runner version
 
 Specify an explicit Ubuntu version (`ubuntu-24.04`) rather than `ubuntu-latest`.
