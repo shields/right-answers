@@ -88,6 +88,8 @@ prose, documentation, and commit messages. Notable conventions:
 - Spell out numbers under 100 in running text.
 - Use an em dash (—) without surrounding spaces.
 - Write "Wi-Fi", not "WiFi".
+- Use "allowlist" and "denylist", not "whitelist" and "blacklist". Applies to
+  prose and to code identifiers.
 
 ## Markdown
 
