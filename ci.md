@@ -19,8 +19,8 @@ Prefer GitHub-owned actions (`actions/*`) or inline shell over third-party
 actions maintained by individuals, even popular ones like
 `dtolnay/rust-toolchain` or `Swatinem/rust-cache`. SHA-pinning protects against
 tag mutation but doesn't help if you trust the wrong maintainer in the first
-place. Toolchains (Rust, Go, Node, Python) are preinstalled on the runner;
-reach for a third-party action only when there's no reasonable alternative.
+place. Toolchains (Rust, Go, Node, Python) are preinstalled on the runner; reach
+for a third-party action only when there's no reasonable alternative.
 
 ### Runner version
 
@@ -85,6 +85,68 @@ jobs:
 
 The same principle applies to `id-token: write` (OIDC), `pull-requests: write`,
 and any other elevation: scope it to the job that needs it, never the workflow.
+
+### Workflow security
+
+Audit workflows with [zizmor](https://docs.zizmor.sh/), using the pedantic
+persona so it also reports hardening opportunities and not just immediately
+actionable findings: `zizmor --pedantic .`. It catches much of this section for
+you—unpinned actions, overbroad `permissions`, and template injection among
+them.
+
+Run it from `make lint` so local and CI stay identical
+([Build via Make](#build-via-make)); where a project already has a toolchain to
+run the pinned binary, that also sidesteps trusting a third-party action
+([Action sources](#action-sources)). Pick the first that applies:
+
+- **Rust** — `cargo install --locked zizmor`, then call `zizmor --pedantic .`
+  from `make lint`.
+- **uv** — call `uvx zizmor --pedantic .` from `make lint`; no separate install
+  step, mirroring how `bunx prettier` runs the Markdown lint.
+- **Neither** — fall back to the third-party
+  [`zizmorcore/zizmor-action`](https://github.com/zizmorcore/zizmor-action), the
+  only option without a local toolchain; it runs in CI only.
+
+Pedantic holds your own workflows to the same bar: a `name` on every workflow
+and job, a [`concurrency`](#concurrency) limit, and an explanatory comment on
+every [`permissions`](#permissions) entry beyond the baseline `contents: read`.
+The fallback workflow, itself clean under `zizmor --pedantic`:
+
+<!-- prettier-ignore -->
+```yaml
+name: zizmor
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  zizmor:
+    name: zizmor
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read # only needed for SARIF upload on private repos
+      security-events: write # upload findings to code scanning
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        with:
+          persona: pedantic
+```
+
+The action uploads findings to code scanning by default; set
+`advanced-security: false` on repositories without GitHub Advanced Security.
 
 ## Renovate
 
