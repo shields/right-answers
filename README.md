@@ -86,10 +86,29 @@ prose, documentation, and commit messages. Notable conventions:
 - Use the serial (Oxford) comma.
 - Titles and headings use sentence case, not title case.
 - Spell out numbers under 100 in running text.
-- Use an em dash (—) without surrounding spaces.
+- Use an em dash (—) without surrounding spaces; in code comments, surround it
+  with spaces.
 - Write "Wi-Fi", not "WiFi".
+- Write "naïve" with a diaeresis, not "naive".
 - Use "allowlist" and "denylist", not "whitelist" and "blacklist". Applies to
   prose and to code identifiers.
+
+## HTML
+
+### Typography
+
+- Use curly quotes (“ ” ‘ ’), not straight quotes.
+- Use en dashes (–) for ranges.
+- Use the minus sign (−, U+2212) for negative numbers and subtraction, not a
+  hyphen.
+- Use a narrow no-break space (U+202F) between a number and its unit, for
+  example, “12 km”.
+
+### Math
+
+Use [MathML](https://developer.mozilla.org/en-US/docs/Web/MathML) for
+mathematical notation instead of MathJax, KaTeX, or images. MathML renders
+natively in all modern browsers without JavaScript.
 
 ## Markdown
 
