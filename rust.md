@@ -5,8 +5,8 @@ using `clap`.
 
 ## Toolchain
 
-Pin the latest stable Rust release in `rust-toolchain.toml` (look it up
-fresh—don't guess from memory):
+Pin the latest stable Rust release in `rust-toolchain.toml` (look it up fresh —
+don't guess from memory):
 
 ```toml
 [toolchain]

@@ -4,7 +4,7 @@
 
 Use [Distroless](https://github.com/GoogleContainerTools/distroless) base images
 by default. Distroless images contain only the application and its runtime
-dependencies—no shell, no package manager, and a minimal attack surface.
+dependencies — no shell, no package manager, and a minimal attack surface.
 
 Choose the appropriate variant:
 
@@ -17,7 +17,7 @@ Choose the appropriate variant:
 Use the `:nonroot` tag to run as a non-root user by default.
 
 Always reference base images by SHA digest rather than tag alone. Tags are
-mutable—a digest guarantees the exact image you tested against:
+mutable — a digest guarantees the exact image you tested against:
 
 ```dockerfile
 FROM gcr.io/distroless/static-debian13:nonroot@sha256:<digest>

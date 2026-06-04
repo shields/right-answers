@@ -10,7 +10,7 @@ Pin actions by SHA digest with a version comment:
 - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 ```
 
-Tags are mutable—a digest guarantees the exact code you reviewed. Renovate
+Tags are mutable — a digest guarantees the exact code you reviewed. Renovate
 updates these automatically.
 
 ### Action sources
@@ -52,7 +52,7 @@ Set workflow-level `permissions: contents: read` and elevate per-job only where
 needed. Job-level permissions apply to every step in that job, so a job that
 runs `make test` while also holding `contents: write` lets any transitive lint
 or test dependency push to the repo via `GITHUB_TOKEN`. A typical Go linter
-pulls in hundreds of indirect modules—that's not a defensible trust boundary.
+pulls in hundreds of indirect modules — that's not a defensible trust boundary.
 
 Split by privilege: a `test` job at `contents: read` runs lint and tests; a
 dependent `build` job at `contents: write` runs only compiled tools
@@ -90,7 +90,7 @@ and any other elevation: scope it to the job that needs it, never the workflow.
 
 Audit workflows with [zizmor](https://docs.zizmor.sh/), using the pedantic
 persona so it also reports hardening opportunities and not just immediately
-actionable findings. It catches much of this section for you—unpinned actions,
+actionable findings. It catches much of this section for you — unpinned actions,
 overbroad `permissions`, and template injection among them.
 
 Run it in CI with the

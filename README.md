@@ -47,7 +47,7 @@ same command. If `make lint` fails, run `make fmt` and re-stage. Don't pass
 ### Unicode
 
 Non-ASCII characters are welcome in documentation, comments, and even variable
-names where they improve clarity—for example, en dashes, em dashes, Greek
+names where they improve clarity — for example, en dashes, em dashes, Greek
 letters (`θ`, `λ`), and mathematical symbols. Use emoji sparingly.
 
 ### Version policy
@@ -111,6 +111,10 @@ mathematical notation instead of MathJax, KaTeX, or images. MathML renders
 natively in all modern browsers without JavaScript.
 
 ## Markdown
+
+Markdown for human readers, which will be rendered to HTML, follows the
+[HTML](#html) conventions. Markdown for agents (`AGENTS.md`, `CLAUDE.md`,
+everything in this repository) is treated like code comments.
 
 ### Formatting
 
