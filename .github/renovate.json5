@@ -9,9 +9,6 @@
       automerge: true,
     },
     {
-      // Majors included deliberately: dev dependencies can't break
-      // production, and platformAutomerge merges only after required checks
-      // pass.
       description: "Automerge dev dependencies",
       matchDepTypes: ["devDependencies"],
       automerge: true,

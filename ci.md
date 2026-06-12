@@ -30,6 +30,22 @@ prefer inline shell.
 Specify an explicit Ubuntu version (`ubuntu-24.04`) rather than `ubuntu-latest`.
 This avoids surprise breakage when GitHub rolls the latest alias forward.
 
+### Triggers
+
+Run on pushes to every branch, plus `pull_request` so PRs from forks still get
+CI:
+
+```yaml
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+```
+
+The `branches` filter keeps tag pushes from triggering. A branch with an open PR
+runs once per event; we accept the duplication so CI runs before a PR is opened
+and on PRs from forks.
+
 ### Concurrency
 
 Use this pattern to cancel superseded runs on branches while protecting main.
@@ -38,10 +54,14 @@ independent so they don't cancel each other:
 
 <!-- prettier-ignore -->
 ```yaml
+# prettier-ignore
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 ```
+
+The `# prettier-ignore` comment keeps Prettier from wrapping the long group
+expression.
 
 ### Build via Make
 
@@ -109,12 +129,13 @@ name: zizmor
 
 on:
   push:
-    branches: [main]
+    branches: ["**"]
   pull_request:
 
 permissions:
   contents: read
 
+# prettier-ignore
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
@@ -172,6 +193,8 @@ Key choices:
   sentences.
 - **`platformAutomerge`** — uses GitHub's native auto-merge, which waits for
   required checks, rather than Renovate's branch-based approach.
+- **Dev dependency automerge includes majors** — dev dependencies can't break
+  production, and the merge still waits for required checks.
 
 For Go projects, add `postUpdateOptions: ["gomodTidy"]` so dep updates
 regenerate `go.sum`; otherwise tool bumps leave it missing `h1:` hashes for new
