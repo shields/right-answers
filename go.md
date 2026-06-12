@@ -10,10 +10,11 @@ project-specific tool dependencies rather than installing tools globally.
 Runners already include Go, but
 [`actions/setup-go`](https://github.com/actions/setup-go) adds caching for
 downloaded modules and compiled packages. Use `go-version-file` rather than
-hardcoding a version:
+hardcoding a version, and pin the action per
+[Action pinning](ci.md#action-pinning):
 
 ```yaml
-- uses: actions/setup-go
+- uses: actions/setup-go@<commit-sha> # vX.Y.Z
   with:
     go-version-file: go.mod
 ```
@@ -33,7 +34,7 @@ Test files are exempt from linters whose output is mostly noise in tests:
   golangci-lint v2.12.0) — keeps test fixtures like repeated `"main.go"` from
   flagging.
 - `errcheck`, `err113`, and `gosec` via a `_test\.go$` path rule under
-  `issues.exclusions.rules`.
+  `linters.exclusions.rules`.
 
 ## Test coverage
 

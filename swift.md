@@ -2,7 +2,8 @@
 
 Target **Swift 6.3** with language mode 6 and strict concurrency. Treat warnings
 as errors (`SWIFT_TREAT_WARNINGS_AS_ERRORS = YES` in Xcode;
-`.treatWarningsAsErrors()` in `Package.swift`).
+[`.treatAllWarnings(as: .error)`](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0480-swiftpm-warning-control.md)
+in `swiftSettings` in `Package.swift`).
 
 ## Tooling
 

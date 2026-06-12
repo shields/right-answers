@@ -26,10 +26,18 @@ ignore = [
   "C90",     # Cyclomatic complexity
   "D",       # pydocstyle (disable docstring rules)
   "PLR09",   # "Too many" branches, arguments, etc.
-  "S603",    # subprocess output
-  "S607",    # subprocess using path
   "T201",    # print()
   "RUF001",  # ambiguous Unicode character in string
   "RUF002",  # ambiguous Unicode character in docstring
   "RUF003",  # ambiguous Unicode character in comment
+
+  # Redundant with or conflicting with the Ruff formatter:
+  # https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+  "W191",    # tab-indentation
+  "E111",    # indentation-with-invalid-multiple
+  "E114",    # indentation-with-invalid-multiple-comment
+  "E117",    # over-indented
+  "COM812",  # missing-trailing-comma
+  "COM819",  # prohibited-trailing-comma
+  "Q",       # flake8-quotes
 ]

@@ -1,7 +1,10 @@
 .PHONY: lint fmt
 
 lint:
-	bunx prettier --check '**/*.md'
+	bunx prettier --check .
+	bunx tsc
+	bunx eslint .
 
 fmt:
-	bunx prettier --write '**/*.md'
+	bunx prettier --write .
+	bunx eslint --fix .

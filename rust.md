@@ -10,7 +10,7 @@ don't guess from memory):
 
 ```toml
 [toolchain]
-channel = "1.95.0"
+channel = "X.Y.Z" # the current stable release, fully specified
 components = ["clippy", "rustfmt"]
 profile = "minimal"
 ```

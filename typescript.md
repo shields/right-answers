@@ -45,7 +45,9 @@ are intentionally adopted with minimal overrides.
 ## Testing
 
 Use `bun test` with 100% coverage thresholds. A shared
-[`bunfig.toml`](bunfig.toml) is provided in this repository.
+[`bunfig.toml`](bunfig.toml) is provided in this repository. Bun enforces
+`coverageThreshold` only when coverage collection is on, so the config also sets
+`coverage = true`.
 
 ## Logging
 

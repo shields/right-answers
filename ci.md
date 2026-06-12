@@ -7,20 +7,23 @@
 Pin actions by SHA digest with a version comment:
 
 ```yaml
-- uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+- uses: actions/checkout@<commit-sha> # vX.Y.Z
 ```
 
-Tags are mutable — a digest guarantees the exact code you reviewed. Renovate
-updates these automatically.
+Tags are mutable — a digest guarantees the exact code you reviewed. Look up the
+current release and its commit SHA fresh (from the action's releases page or
+`gh api`); never copy them from memory, documentation, or another repository.
+Renovate keeps them current afterward.
 
 ### Action sources
 
-Prefer GitHub-owned actions (`actions/*`) or inline shell over third-party
-actions maintained by individuals, even popular ones like
-`dtolnay/rust-toolchain` or `Swatinem/rust-cache`. SHA-pinning protects against
-tag mutation but doesn't help if you trust the wrong maintainer in the first
-place. Toolchains (Rust, Go, Node, Python) are preinstalled on the runner; reach
-for a third-party action only when there's no reasonable alternative.
+Judge an action by its maintainer. GitHub-owned (`actions/*`) and vendor-owned
+actions (`oven-sh/setup-bun`, `docker/login-action`) are fine — you already
+trust the vendor. Avoid actions from unaffiliated individuals, even popular ones
+like `dtolnay/rust-toolchain`: SHA-pinning doesn't help if you trust the wrong
+maintainer in the first place. Toolchains (Rust, Go, Node, Python) are
+preinstalled on runners, so a setup action is often unnecessary; failing that,
+prefer inline shell.
 
 ### Runner version
 
@@ -120,21 +123,18 @@ jobs:
   zizmor:
     name: zizmor
     runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      actions: read # only needed for SARIF upload on private repos
-      security-events: write # upload findings to code scanning
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@<commit-sha> # vX.Y.Z
         with:
           persist-credentials: false
-      - uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+      - uses: zizmorcore/zizmor-action@<commit-sha> # vX.Y.Z
         with:
           persona: pedantic
+          advanced-security: false
 ```
 
-The action uploads findings to code scanning by default; set
-`advanced-security: false` on repositories without GitHub Advanced Security.
+We don't use GitHub code scanning; `advanced-security: false` skips the SARIF
+upload and makes the run fail directly on findings.
 
 ## Renovate
 

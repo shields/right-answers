@@ -1,2 +1,4 @@
 [test]
+# Thresholds are fractions of one and only enforced when coverage is on.
+coverage = true
 coverageThreshold = { lines = 1.0, functions = 1.0, statements = 1.0 }
