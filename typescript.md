@@ -37,6 +37,12 @@ this repository. It includes
 [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) as
 the final config entry to disable rules that conflict with Prettier.
 
+## Naming
+
+Uppercase acronyms and initialisms in full — `HTTPClient`, `parseHTML`,
+`userID`, not `HttpClient`. The ecosystem has no enforced default, so we settle
+it here.
+
 ## Formatting
 
 Use [Prettier](https://prettier.io/) for code formatting. Prettier's defaults
