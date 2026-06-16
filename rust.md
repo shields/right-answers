@@ -26,7 +26,7 @@ don't guess from memory):
 
 ```toml
 [toolchain]
-channel = "X.Y.Z" # the current stable release, fully specified
+channel = "X.Y.Z"                  # the current stable release, fully specified
 components = ["clippy", "rustfmt"]
 profile = "minimal"
 ```
@@ -52,38 +52,38 @@ nursery = { level = "deny", priority = -1 }
 cargo = { level = "deny", priority = -1 }
 
 # Panic safety
-string_slice                    = "deny"
-indexing_slicing                = "deny"
-unwrap_used                     = "deny"
-panic                           = "deny"
-todo                            = "deny"
-unimplemented                   = "deny"
-unreachable                     = "deny"
-get_unwrap                      = "deny"
-unwrap_in_result                = "deny"
-panic_in_result_fn              = "deny"
-unchecked_time_subtraction      = "deny"
+string_slice = "deny"
+indexing_slicing = "deny"
+unwrap_used = "deny"
+panic = "deny"
+todo = "deny"
+unimplemented = "deny"
+unreachable = "deny"
+get_unwrap = "deny"
+unwrap_in_result = "deny"
+panic_in_result_fn = "deny"
+unchecked_time_subtraction = "deny"
 # Silent-failure
-unused_result_ok                = "deny"
-map_err_ignore                  = "deny"
-assertions_on_result_states     = "deny"
+unused_result_ok = "deny"
+map_err_ignore = "deny"
+assertions_on_result_states = "deny"
 # Unsafe discipline (redundant with forbid(unsafe_code), kept for portability)
-mem_forget                      = "deny"
-undocumented_unsafe_blocks      = "deny"
-multiple_unsafe_ops_per_block   = "deny"
-unnecessary_safety_doc          = "deny"
-unnecessary_safety_comment      = "deny"
+mem_forget = "deny"
+undocumented_unsafe_blocks = "deny"
+multiple_unsafe_ops_per_block = "deny"
+unnecessary_safety_doc = "deny"
+unnecessary_safety_comment = "deny"
 # Numbers (the rest live in pedantic)
-float_cmp_const                 = "deny"
-lossy_float_literal             = "deny"
+float_cmp_const = "deny"
+lossy_float_literal = "deny"
 # Easy wins
-dbg_macro                       = "deny"
-infallible_try_from             = "deny"
-clone_on_ref_ptr                = "deny"
-verbose_file_reads              = "deny"
-tests_outside_test_module       = "deny"
+dbg_macro = "deny"
+infallible_try_from = "deny"
+clone_on_ref_ptr = "deny"
+verbose_file_reads = "deny"
+tests_outside_test_module = "deny"
 # Force every suppression deliberate + documented
-allow_attributes                = "deny"
+allow_attributes = "deny"
 allow_attributes_without_reason = "deny"
 ```
 

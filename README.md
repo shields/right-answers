@@ -42,7 +42,7 @@ Typical targets:
 - `make run`
 
 `make lint` and `make fmt` should cover everything in the project, including
-non-code files like Markdown.
+non-code files such as Markdown, JSON, YAML, and TOML.
 
 ### Git hooks
 
@@ -134,7 +134,11 @@ everything in this repository) is treated like code comments.
 
 ### Formatting
 
-Use [Prettier](https://prettier.io/) to format Markdown files.
+Use [Prettier](https://prettier.io/) to format Markdown. Prettier handles JSON
+and YAML natively; add
+[`prettier-plugin-toml`](https://github.com/un-ts/prettier/tree/master/packages/toml)
+so the same run also formats TOML, such as [`.ruff.toml`](.ruff.toml) and
+[`bunfig.toml`](bunfig.toml).
 
 ### Diagrams
 
