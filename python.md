@@ -32,10 +32,6 @@ rules that are overly noisy or conflict with our style.
 
 Use [ty](https://docs.astral.sh/ty/) for type checking.
 
-## Error handling
-
-Inherit project exceptions from `Exception`, not `BaseException`.
-
 ## Logging
 
 Use [structlog](https://www.structlog.org/) for structured logging in services.
