@@ -58,5 +58,5 @@ defaultBaseImage: gcr.io/distroless/static-debian13:nonroot
 .PHONY: image
 
 image:
-	ko build ./cmd/server
+	go tool ko build ./cmd/server
 ```

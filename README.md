@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# Style and Best Practices
+# Style and best practices
 
 This repository documents shared conventions used across projects. Individual
 repositories should reference this as the canonical source.
