@@ -61,9 +61,6 @@ linters:
     goconst:
       ignore-tests: true
 
-    exhaustive:
-      default-signifies-exhaustive: true
-
     godot:
       scope: declarations
 
