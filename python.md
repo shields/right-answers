@@ -32,6 +32,12 @@ rules that are overly noisy or conflict with our style.
 
 Use [ty](https://docs.astral.sh/ty/) for type checking.
 
+## Testing
+
+Use [pytest](https://docs.pytest.org/) for tests. Write tests as plain
+functions with bare `assert` statements rather than `unittest.TestCase`
+subclasses, and use fixtures rather than `setUp`/`tearDown`.
+
 ## Logging
 
 Use [structlog](https://www.structlog.org/) for structured logging in services.
