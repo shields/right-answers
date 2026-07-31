@@ -49,6 +49,22 @@ swift test --enable-code-coverage
 Use [swift-argument-parser](https://github.com/apple/swift-argument-parser) for
 command-line tools.
 
+## SwiftUI
+
+A string _literal_ passed to `Text` — including an interpolated one — binds to
+the
+[`LocalizedStringKey`](https://developer.apple.com/documentation/swiftui/localizedstringkey)
+overload, which SwiftUI markdown-parses: `*`, `_`, `` ` ``, `~~` and `[](…)` are
+eaten as markup. A `String`-typed expression binds to the `StringProtocol`
+overload and is not parsed. Resolution turns on literal-vs-variable, not on
+content, and nothing warns.
+
+Use `Text(verbatim:)` for machine-formatted text, and keep the bare literal for
+static copy that is genuinely translatable. `Text("\(n) rows")` is the shape to
+watch: it looks inert and is not. `specifier:` is available only on the
+`LocalizedStringKey` interpolation, so a site using it has to move its
+formatting out of the literal.
+
 ## Logging
 
 Use [`os.Logger`](https://developer.apple.com/documentation/os/logger) for app
