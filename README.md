@@ -106,6 +106,7 @@ prose, documentation, and commit messages. Notable conventions:
   with spaces.
 - Write "Wi-Fi", not "WiFi".
 - Write "naïve" with a diaeresis, not "naive".
+- Write "kB" (1000 bytes) or "KiB" (1024 bytes), never "KB".
 - Use "allowlist" and "denylist", not "whitelist" and "blacklist". Applies to
   prose and to code identifiers.
 
