@@ -26,6 +26,7 @@ linters:
   disable:
     - depguard
     - exhaustruct
+    - exhaustruct_v5
     - funlen
     - godox
     - wsl
@@ -34,6 +35,7 @@ linters:
     - ireturn
     - exhaustive
     - gochecknoglobals
+    - gomodguard # Deprecated in v2.12.0; gomodguard_v2 replaces it
     - tagliatelle
     - cyclop
     - gocognit
