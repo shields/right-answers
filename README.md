@@ -97,14 +97,18 @@ Distroless base images and ko for Go.
 ## English
 
 Follow the [Chicago Manual of Style](https://www.chicagomanualofstyle.org/) for
-prose, documentation, and commit messages. Notable conventions:
+prose, documentation, and commit messages. Notable CMOS conventions:
 
 - Use the serial (Oxford) comma.
-- Titles and headings use sentence case, not title case.
-- Spell out numbers under 100 in running text.
-- Use an em dash (—) without surrounding spaces; in code comments, surround it
-  with spaces.
+- Use an em dash (—) without surrounding spaces.
 - Write "Wi-Fi", not "WiFi".
+
+Local rules, including departures from CMOS:
+
+- Titles and headings use sentence case, not headline (title) case.
+- Spell out zero through nine in running text; use numerals for all other
+  numbers. (This is CMOS's alternative rule, not its general rule.)
+- In code comments, surround em dashes with spaces.
 - Write "naïve" with a diaeresis, not "naive".
 - Write "kB" (1000 bytes) or "KiB" (1024 bytes), never "KB".
 - Use "allowlist" and "denylist", not "whitelist" and "blacklist". Applies to
