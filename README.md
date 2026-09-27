@@ -19,12 +19,6 @@ limitations under the License.
 This repository documents shared conventions used across projects. Individual
 repositories should reference this as the canonical source.
 
-## Agents
-
-Agent instructions live in `AGENTS.md`. `CLAUDE.md` is a symlink to it until
-Claude Code supports `AGENTS.md` natively
-([anthropics/claude-code#6235](https://github.com/anthropics/claude-code/issues/6235)).
-
 ## General
 
 ### Makefiles
@@ -134,8 +128,8 @@ natively in all modern browsers without JavaScript.
 ## Markdown
 
 Markdown for human readers, which will be rendered to HTML, follows the
-[HTML](#html) conventions. Markdown for agents (`AGENTS.md`, `CLAUDE.md`,
-everything in this repository) is treated like code comments.
+[HTML](#html) conventions. Markdown for agents (`AGENTS.md`, everything in this
+repository) is treated like code comments.
 
 ### Formatting
 
