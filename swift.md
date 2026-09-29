@@ -16,7 +16,7 @@ limitations under the License.
 
 # Swift
 
-Target **Swift 6.3** with language mode 6 and strict concurrency. Treat warnings
+Target **Swift 6.4** with language mode 6 and strict concurrency. Treat warnings
 as errors (`SWIFT_TREAT_WARNINGS_AS_ERRORS = YES` in Xcode;
 [`.treatAllWarnings(as: .error)`](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0480-swiftpm-warning-control.md)
 in `swiftSettings` in `Package.swift`).
