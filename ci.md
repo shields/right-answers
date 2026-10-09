@@ -68,16 +68,16 @@ Use this pattern to cancel superseded runs on branches while protecting main.
 Including `event_name` in the group key keeps push and pull_request runs
 independent so they don't cancel each other:
 
-<!-- prettier-ignore -->
 ```yaml
-# prettier-ignore
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 ```
 
-The `# prettier-ignore` comment keeps Prettier from wrapping the long group
-expression.
+Key on `github.ref`, not `github.head_ref`. A pull request's ref
+(`refs/pull/N/merge`) is unique, but its head ref is just the source branch
+name, so PRs from different forks that share one (say, two `patch-1` branches)
+would cancel each other.
 
 ### Build via Make
 
@@ -139,7 +139,6 @@ and job, a [`concurrency`](#concurrency) limit, and an explanatory comment on
 every [`permissions`](#permissions) entry beyond the baseline `contents: read`.
 The workflow below is itself clean under pedantic:
 
-<!-- prettier-ignore -->
 ```yaml
 name: zizmor
 
@@ -151,9 +150,8 @@ on:
 permissions:
   contents: read
 
-# prettier-ignore
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
