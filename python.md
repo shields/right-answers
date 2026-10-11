@@ -21,7 +21,7 @@ limitations under the License.
 Use [uv](https://docs.astral.sh/uv/) for all Python project and package
 management. Do not use pip, pip-tools, or poetry.
 
-Target **Python 3.14** whenever possible.
+Target **Python 3.15** whenever possible.
 
 ## Linting and formatting
 
