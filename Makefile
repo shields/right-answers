@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-.PHONY: lint fmt
+.PHONY: lint fmt install
 
 lint:
 	bunx prettier --check .
@@ -22,3 +22,6 @@ lint:
 fmt:
 	bunx prettier --write .
 	bunx eslint --fix .
+
+install:
+	bun install --frozen-lockfile

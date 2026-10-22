@@ -48,36 +48,45 @@ This avoids surprise breakage when GitHub rolls the latest alias forward.
 
 ### Triggers
 
-Run on pushes to every branch, plus `pull_request` so PRs from forks still get
-CI:
+For private repositories whose contributions come from branches in the same
+repository, run once per branch push:
 
 ```yaml
 on:
   push:
     branches: ["**"]
-  pull_request:
 ```
 
-The `branches` filter keeps tag pushes from triggering. A branch with an open PR
-runs once per event; we accept the duplication so CI runs before a PR is opened
-and on PRs from forks.
+A pull request displays the checks attached to its branch commit, so opening a
+PR is unnecessary to get CI. These builds test the branch head, not GitHub's
+synthetic merge commit. The `branches` filter excludes tags.
+
+Repositories accepting forks need `pull_request`, because a push in a fork does
+not trigger the upstream workflow. Use pushes to the default branch plus
+`pull_request` when merge-result testing matters. If every branch needs pre-PR
+checks as well, retain both triggers and account for their duplicate builds. Do
+not add a skipped same-name PR job to deduplicate checks: its successful skip
+can obscure the branch build's result.
+
+Path selection on feature branches must cover the full diff from the merge base
+with the default branch. Comparing only the latest push can skip an earlier code
+change after a docs-only follow-up. Default-branch pushes compare the previous
+commit. Missing bases and unknown paths run the complete checks.
 
 ### Concurrency
 
-Use this pattern to cancel superseded runs on branches while protecting main.
-Including `event_name` in the group key keeps push and pull_request runs
-independent so they don't cancel each other:
+Cancel superseded branch runs while protecting main:
 
 ```yaml
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 ```
 
-Key on `github.ref`, not `github.head_ref`. A pull request's ref
-(`refs/pull/N/merge`) is unique, but its head ref is just the source branch
-name, so PRs from different forks that share one (say, two `patch-1` branches)
-would cancel each other.
+For workflows with both push and pull-request triggers, add `github.event_name`
+to the group key so the events cannot cancel one another. Use `github.ref` for
+PRs: its `refs/pull/N/merge` value is unique even when forks share a branch
+name.
 
 ### Build via Make
 
@@ -199,6 +208,36 @@ Place the config in `.github/renovate.json5`:
   ],
 }
 ```
+
+For repositories with paid CI, batch compatible non-major updates by ecosystem
+and allow a four-hour daily window. For example:
+
+```json5
+{
+  timezone: "America/Los_Angeles",
+  schedule: ["* 0-3 * * *"],
+  updateNotScheduled: false,
+  vulnerabilityAlerts: { updateNotScheduled: true },
+  packageRules: [
+    {
+      matchDatasources: ["npm"],
+      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
+      groupName: "JavaScript non-major dependencies",
+    },
+    {
+      matchManagers: ["github-actions"],
+      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
+      groupName: "GitHub Actions non-major dependencies",
+    },
+  ],
+}
+```
+
+Add separate groups for the repository's other ecosystems. Keep JavaScript
+updates separate from native dependencies so path selection can skip macOS.
+`updateNotScheduled: false` also delays routine updates to existing branches;
+Renovate's vulnerability alerts retain their separate, unscheduled branches. The
+window permits updates when Renovate visits; it does not schedule a bot run.
 
 Key choices:
 
