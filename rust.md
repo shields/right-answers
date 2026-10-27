@@ -31,8 +31,14 @@ components = ["clippy", "rustfmt"]
 profile = "minimal"
 ```
 
-Both local `cargo` and CI pick this up automatically. Renovate updates the
-channel like action SHAs.
+Both local `cargo` and CI pick this up automatically. Initialize CI with:
+
+```sh
+# Omit the toolchain so rustup reads the release and components from rust-toolchain.toml.
+rustup toolchain install
+```
+
+Renovate updates the channel like action SHAs.
 
 ## Linting
 
@@ -50,6 +56,7 @@ all = { level = "deny", priority = -1 }
 pedantic = { level = "deny", priority = -1 }
 nursery = { level = "deny", priority = -1 }
 cargo = { level = "deny", priority = -1 }
+multiple_crate_versions = "allow"
 
 # Panic safety
 string_slice = "deny"
@@ -87,6 +94,10 @@ allow_attributes = "deny"
 allow_attributes_without_reason = "deny"
 ```
 
+Allow `multiple_crate_versions`: transitive dependencies can require
+incompatible versions of the same crate. Use `cargo tree --duplicates` to
+inspect them.
+
 The restriction set follows
 [Schwartz](https://emschwartz.me/your-clippy-config-should-be-stricter/), minus
 `arithmetic_side_effects`: in practice almost every fire is a capacity hint or a
@@ -121,8 +132,24 @@ top of the file:
 
 ## Test coverage
 
-Use `cargo llvm-cov` on nightly. Cfg-gate `#[coverage(off)]` on `main()` and
-register the cfg in workspace lints:
+Use `cargo llvm-cov` on nightly and require 100% region coverage. In CI coverage
+jobs, install nightly and its LLVM tools first:
+
+```sh
+rustup toolchain install nightly --profile minimal --component llvm-tools-preview
+```
+
+Line coverage can reach 100% while parts of expressions remain untested. Set the
+Makefile gate with `--fail-under-regions 100`:
+
+```makefile
+coverage:
+	# cargo-llvm-cov sets coverage_nightly on nightly so coverage(off) takes effect.
+	# https://github.com/taiki-e/cargo-llvm-cov#exclude-code-from-coverage
+	cargo +nightly llvm-cov --fail-under-regions 100
+```
+
+Cfg-gate `#[coverage(off)]` on `main()` and register the cfg in workspace lints:
 
 ```rust
 #![cfg_attr(coverage_nightly, feature(coverage_attribute))]
