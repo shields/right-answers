@@ -22,6 +22,11 @@ Use [Bun](https://bun.sh/) as the package manager and test runner. Use
 `bun install` and `bun.lock` for dependency management. Do not use npm, yarn, or
 pnpm.
 
+Install dependencies with `make install`, then run project tools with
+`bun run --bun --no-install <tool>`. This uses installed binaries, selects Bun's
+runtime, and disables automatic dependency installation. Bun loads TypeScript
+configuration files natively.
+
 ## TypeScript configuration
 
 Use TypeScript in type-checking-only mode (`noEmit: true`).

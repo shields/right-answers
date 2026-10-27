@@ -15,13 +15,13 @@
 .PHONY: lint fmt install
 
 lint:
-	bunx prettier --check .
-	bunx tsc
-	bunx eslint .
+	bun run --bun --no-install prettier --check .
+	bun run --bun --no-install tsc
+	bun run --bun --no-install eslint .
 
 fmt:
-	bunx prettier --write .
-	bunx eslint --fix .
+	bun run --bun --no-install prettier --write .
+	bun run --bun --no-install eslint --fix .
 
 install:
 	bun install --frozen-lockfile
