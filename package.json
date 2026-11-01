@@ -2,7 +2,7 @@
   "type": "module",
   "devDependencies": {
     "@eslint/js": "10.0.1",
-    "@types/node": "26.6.5",
+    "@types/node": "26.6.6",
     "eslint": "10.13.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-unicorn": "79.0.0",
