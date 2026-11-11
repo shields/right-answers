@@ -27,6 +27,16 @@ Install dependencies with `make install`, then run project tools with
 runtime, and disables automatic dependency installation. Bun loads TypeScript
 configuration files natively.
 
+## TypeScript 7
+
+Type-check with TypeScript 7. typescript-eslint still needs the 6.0 API, so
+[install both](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-60)
+rather than staying on 6:
+
+```sh
+bun add -d --exact typescript@npm:@typescript/typescript6 @typescript/native@npm:typescript@7
+```
+
 ## TypeScript configuration
 
 Use TypeScript in type-checking-only mode (`noEmit: true`).
