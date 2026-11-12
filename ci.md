@@ -70,8 +70,30 @@ can obscure the branch build's result.
 
 Path selection on feature branches must cover the full diff from the merge base
 with the default branch. Comparing only the latest push can skip an earlier code
-change after a docs-only follow-up. Default-branch pushes compare the previous
-commit. Missing bases and unknown paths run the complete checks.
+change after a docs-only follow-up. Default-branch pushes compare the head SHA
+of the workflow's latest successful push run on that branch, so changes from a
+failed or cancelled run stay selected until a later run passes. Find it through
+the Actions API (`gh api repos/$GITHUB_REPOSITORY/actions/workflows/<file>/runs`
+with `branch`, `event=push`, `status=success`, and `per_page=1`) from a job with
+`actions: read`, and give only `gh` the token, not the selector's other
+commands. A failed lookup fails the run. No successful run, a malformed or
+missing commit, or a base that is not an ancestor of the pushed commit runs the
+complete checks, as do unknown paths.
+
+Do not require branches to be up to date before merging: each merge would
+invalidate every open branch's checks. Pair that with Renovate's
+`rebaseWhen: "conflicted"`, since automerge otherwise rebases every update
+branch onto each new default-branch commit.
+
+An expensive default-branch job may be skipped when a branch push run of the
+same tree (`head_commit.tree_id`) passed every job on GitHub-hosted runners
+recently; runner images change, so only a recent result stands in. A job that
+needs a skipped job is skipped too, and so are its indirect dependents unless
+each overrides the default `success()` with `!cancelled()` and explicit result
+checks (actions/runner#2205).
+
+Give every job `timeout-minutes` so stuck work cannot run for GitHub's six-hour
+default.
 
 ### Concurrency
 
@@ -197,11 +219,11 @@ Use the shared presets from this repository. Place the config in
 }
 ```
 
-| Preset                                  | Policy                                                                                                                  |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| [base.json5](renovate/base.json5)       | Best practices, plain commit messages, platform automerge, and three-day cooldowns for npm, PyPI, and crates.io.        |
-| [go.json5](renovate/go.json5)           | Run `gomodTidy` after dependency updates to regenerate `go.sum`, including hashes for new transitive dependencies.      |
-| [paid-ci.json5](renovate/paid-ci.json5) | Batch non-major npm and GitHub Actions updates separately and allow a daily midnight–4 a.m. window in Los Angeles time. |
+| Preset                                  | Policy                                                                                                                                      |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| [base.json5](renovate/base.json5)       | Best practices, plain commit messages, platform automerge, rebasing only on conflict, and three-day cooldowns for npm, PyPI, and crates.io. |
+| [go.json5](renovate/go.json5)           | Run `gomodTidy` after dependency updates to regenerate `go.sum`, including hashes for new transitive dependencies.                          |
+| [paid-ci.json5](renovate/paid-ci.json5) | Batch non-major npm and GitHub Actions updates separately and allow a daily midnight–4 a.m. window in Los Angeles time.                     |
 
 Optional presets add to the base; they do not include it. For a Go repository
 with paid CI:
@@ -235,6 +257,9 @@ The base preset preserves these choices:
 - **`:semanticCommitsDisabled`** — matches the
   [commit message convention](README.md#commit-messages) of plain imperative
   sentences.
+- **`rebaseWhen: "conflicted"`** — rebases an update branch only when it
+  conflicts, so merges to the default branch do not rerun CI on every open
+  update.
 - **`platformAutomerge`** — uses GitHub's native auto-merge, which waits for
   required checks, rather than Renovate's branch-based approach.
 - **Non-major automerge** — minor, patch, pin, and digest updates may automerge.
