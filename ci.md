@@ -187,68 +187,108 @@ supports grouped updates, automerge, and regex managers for non-standard
 dependency sources (Dockerfile digests, action SHAs, tool versions in
 Makefiles).
 
-Place the config in `.github/renovate.json5`:
+Use the shared presets from this repository. Place the config in
+`.github/renovate.json5`:
 
 ```json5
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:best-practices", ":semanticCommitsDisabled"],
-  platformAutomerge: true,
-  packageRules: [
-    {
-      description: "Automerge non-major updates",
-      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
-      automerge: true,
-    },
-    {
-      description: "Automerge dev dependencies",
-      matchDepTypes: ["devDependencies"],
-      automerge: true,
-    },
-  ],
+  extends: ["github>shields/right-answers//renovate/base.json5"],
 }
 ```
 
-For repositories with paid CI, batch compatible non-major updates by ecosystem
-and allow a four-hour daily window. For example:
+| Preset                                  | Policy                                                                                                                  |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| [base.json5](renovate/base.json5)       | Best practices, plain commit messages, platform automerge, and three-day cooldowns for npm, PyPI, and crates.io.        |
+| [go.json5](renovate/go.json5)           | Run `gomodTidy` after dependency updates to regenerate `go.sum`, including hashes for new transitive dependencies.      |
+| [paid-ci.json5](renovate/paid-ci.json5) | Batch non-major npm and GitHub Actions updates separately and allow a daily midnight–4 a.m. window in Los Angeles time. |
+
+Optional presets add to the base; they do not include it. For a Go repository
+with paid CI:
 
 ```json5
 {
-  timezone: "America/Los_Angeles",
-  schedule: ["* 0-3 * * *"],
-  updateNotScheduled: false,
-  vulnerabilityAlerts: { updateNotScheduled: true },
-  packageRules: [
-    {
-      matchDatasources: ["npm"],
-      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
-      groupName: "JavaScript non-major dependencies",
-    },
-    {
-      matchManagers: ["github-actions"],
-      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
-      groupName: "GitHub Actions non-major dependencies",
-    },
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "github>shields/right-answers//renovate/base.json5",
+    "github>shields/right-answers//renovate/go.json5",
+    "github>shields/right-answers//renovate/paid-ci.json5",
   ],
 }
 ```
 
-Add separate groups for the repository's other ecosystems. Keep JavaScript
-updates separate from native dependencies so path selection can skip macOS.
-`updateNotScheduled: false` also delays routine updates to existing branches;
-Renovate's vulnerability alerts retain their separate, unscheduled branches. The
-window permits updates when Renovate visits; it does not schedule a bot run.
+These references follow this repository's default branch. A merged preset change
+applies to consumers on subsequent Renovate runs without a consumer PR. Publish
+new presets before migrating other repositories to reference them.
 
-Key choices:
+Keep custom managers, version restrictions, project-specific exceptions, and
+additional ecosystem groups in the consuming repository. Repository settings
+override preset settings, except for mergeable options such as `packageRules`,
+which append to the inherited rules. Later matching package rules take
+precedence. See Renovate's
+[configuration precedence](https://docs.renovatebot.com/config-overview/#config-precedence).
+
+### Automerge
+
+The base preset preserves these choices:
 
 - **`:semanticCommitsDisabled`** — matches the
   [commit message convention](README.md#commit-messages) of plain imperative
   sentences.
 - **`platformAutomerge`** — uses GitHub's native auto-merge, which waits for
   required checks, rather than Renovate's branch-based approach.
-- **Dev dependency automerge includes majors** — dev dependencies can't break
-  production, and the merge still waits for required checks.
+- **Non-major automerge** — minor, patch, pin, and digest updates may automerge.
+- **Dev dependency automerge includes majors** — updates matching
+  `devDependencies` may automerge after required checks pass. Cooldowns still
+  apply to eligible update types.
 
-For Go projects, add `postUpdateOptions: ["gomodTidy"]` so dep updates
-regenerate `go.sum`; otherwise tool bumps leave it missing `h1:` hashes for new
-transitive deps. Casing matters: `goModTidy` is silently ignored.
+### Cooldowns
+
+The base inherits `security:minimumReleaseAgeNpm` through
+`config:best-practices` and adds `security:minimumReleaseAgePypi` and
+`security:minimumReleaseAgeCrate`. These
+[upstream presets](https://docs.renovatebot.com/presets-security/) require a
+minimum release age of three days and filter out pending releases before
+creating update branches. This applies to regular major, minor, and patch
+updates of both production and development dependencies. Renovate's default
+release-age buffer also applies.
+
+Preserve the upstream timestamp requirement and exceptions for update types that
+cannot enforce release age, including pinning, replacements, and lockfile
+maintenance. Vulnerability-alert fixes bypass the cooldown by default. No
+blanket cooldown applies to other datasources; requiring timestamps from a
+source that does not provide them can block updates indefinitely.
+
+Renovate's cooldown does not cover every newly resolved transitive dependency or
+lockfile-maintenance update. Package-manager cooldown settings provide
+additional coverage and must be configured separately. See Renovate's
+[minimum release age documentation](https://docs.renovatebot.com/key-concepts/minimum-release-age/).
+
+### Paid CI
+
+Cooldowns measure the age of each release. The optional paid-CI schedule
+controls when eligible updates run; it does not schedule a bot run or delay
+updates until a project stops publishing releases.
+
+Add separate groups for the repository's other ecosystems. Keep JavaScript
+updates separate from native dependencies so path selection can skip macOS.
+`updateNotScheduled: false` also delays routine updates to existing branches;
+the preset exempts vulnerability alerts, which retain their separate,
+unscheduled branches.
+
+### Validation
+
+Run `make install`, then `make lint`. All project tools run under Bun. Lint runs
+`renovate-config-validator --strict --no-global` against every checked-out
+preset and this repository's Renovate configuration. Git hooks and CI run the
+same checks.
+
+Validation sets `RENOVATE_X_IGNORE_RE2=true` to use JavaScript's regex engine.
+These presets define no custom regex patterns; validation does not guarantee RE2
+compatibility for patterns added later. Dependency lifecycle scripts are not
+trusted, so installation does not build the optional native RE2 binding.
+
+Validating the local files checks proposed policy before publication. It does
+not prove that a remote preset reference resolves. After publishing, verify
+successful preset resolution on the next Renovate run before migrating other
+repositories.

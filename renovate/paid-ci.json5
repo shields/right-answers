@@ -1,0 +1,19 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  timezone: "America/Los_Angeles",
+  schedule: ["* 0-3 * * *"],
+  updateNotScheduled: false,
+  vulnerabilityAlerts: { updateNotScheduled: true },
+  packageRules: [
+    {
+      matchDatasources: ["npm"],
+      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
+      groupName: "JavaScript non-major dependencies",
+    },
+    {
+      matchManagers: ["github-actions"],
+      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
+      groupName: "GitHub Actions non-major dependencies",
+    },
+  ],
+}

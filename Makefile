@@ -18,6 +18,7 @@ lint:
 	bun run --bun --no-install prettier --check .
 	bun run --bun --no-install tsc
 	bun run --bun --no-install eslint .
+	RENOVATE_X_IGNORE_RE2=true bun run --bun --no-install renovate-config-validator --strict --no-global renovate/*.json5 .github/renovate.json5
 
 fmt:
 	bun run --bun --no-install prettier --write .
