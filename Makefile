@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-.PHONY: lint fmt install
+.PHONY: lint fmt install actions-lock-install actions-lock actions-lock-verify-local actions-lock-verify
 
-lint:
+lint: actions-lock-verify-local
 	bun run --bun --no-install prettier --check .
 	bun run --bun --no-install tsc
 	bun run --bun --no-install eslint .
@@ -24,5 +24,17 @@ fmt:
 	bun run --bun --no-install prettier --write .
 	bun run --bun --no-install eslint --fix .
 
-install:
+install: actions-lock-install
 	bun install --frozen-lockfile
+
+actions-lock-install:
+	gh extension install github/gh-actions-lock --pin v0.4.1 --force
+
+actions-lock:
+	gh actions-lock --no-interactive
+
+actions-lock-verify-local:
+	gh actions-lock --verify-local
+
+actions-lock-verify:
+	gh actions-lock --verify

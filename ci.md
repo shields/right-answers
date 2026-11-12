@@ -18,18 +18,62 @@ limitations under the License.
 
 ## GitHub Actions
 
-### Action pinning
+### Workflow dependency locks
 
-Pin actions by SHA digest with a version comment:
+Use readable full-version tags for actions and commit the generated
+`.github/workflows/actions.lock`:
 
 ```yaml
-- uses: actions/checkout@<commit-sha> # vX.Y.Z
+- uses: actions/checkout@vX.Y.Z
 ```
 
-Tags are mutable — a digest guarantees the exact code you reviewed. Look up the
-current release and its commit SHA fresh (from the action's releases page or
-`gh api`); never copy them from memory, documentation, or another repository.
-Renovate keeps them current afterward.
+The
+[workflow dependency lockfile](https://docs.github.com/en/actions/concepts/security/workflow-dependency-lockfiles)
+records the verified commit and repository identity for each direct and
+transitive action dependency. Look up current releases fresh; never copy
+versions from memory or examples. Review changes to locked commits, repository
+identities, and composite-action dependencies as executable code changes.
+
+Install the pinned `github/gh-actions-lock` extension through
+`make actions-lock-install`. Run `make actions-lock` after adding or editing
+workflows; never edit the lockfile by hand. Onboard every workflow, including
+verification workflows and workflows without action dependencies.
+
+Provide these Make targets in every participating repository:
+
+| Target                      | Command                                                            |
+| --------------------------- | ------------------------------------------------------------------ |
+| `actions-lock-install`      | `gh extension install github/gh-actions-lock --pin vX.Y.Z --force` |
+| `actions-lock`              | `gh actions-lock --no-interactive`                                 |
+| `actions-lock-verify-local` | `gh actions-lock --verify-local`                                   |
+| `actions-lock-verify`       | `gh actions-lock --verify`                                         |
+
+Include offline coverage verification in `make lint`. Run online provenance
+verification in a separate read-only CI job named `actions-lock`, passing
+`GH_TOKEN: ${{ github.token }}` only to the step that needs it. Offline checks
+do not establish provenance. Require the online check after it has been
+published and its exact emitted name has been confirmed.
+
+Lockfiles do not cover external reusable workflow calls or container images.
+Keep full commit SHAs with version comments on external `jobs.<job_id>.uses`
+references, and digest pins on containers. Preserve same-repository workflow
+references. A called reusable workflow's actions must be locked in its source
+repository.
+
+Inspect local actions before converting `./path` to `$/path`. `./path` runs from
+the checked-out workspace, which can intentionally contain generated or modified
+files; `$/path` resolves from the workflow's source commit. Do not change that
+behavior just to satisfy the lock tool. Document and review any necessary
+exception for a workspace action with remote dependencies.
+
+After publishing and verifying coverage in every targeted workflow and called
+workflow, enable the **Require lockfile** execution policy. Start in Evaluate
+mode where available, scoped to participating repositories, then activate it
+after examining actual runs. It blocks uncovered workflows even when they
+contain no actions. Exclude forks and archived repositories from the rollout. If
+the account cannot use the policy, record the limitation and retain the required
+online verification check. See GitHub's
+[enforcement guide](https://docs.github.com/en/actions/how-tos/administer/enforce-workflow-lockfiles).
 
 ### Action sources
 
@@ -43,7 +87,7 @@ prefer inline shell.
 
 ### Runner version
 
-Specify an explicit Ubuntu version (`ubuntu-24.04`) rather than `ubuntu-latest`.
+Specify an explicit Ubuntu version (`ubuntu-26.04`) rather than `ubuntu-latest`.
 This avoids surprise breakage when GitHub rolls the latest alias forward.
 
 ### Triggers
@@ -127,7 +171,7 @@ pulls in hundreds of indirect modules — that's not a defensible trust boundary
 Split by privilege: a `test` job at `contents: read` runs lint and tests; a
 dependent `build` job at `contents: write` runs only compiled tools
 (`go tool ko`, `docker/login-action`, etc.) whose code is pinned in `go.mod` or
-by SHA.
+the workflow lockfile.
 
 <!-- prettier-ignore -->
 ```yaml
@@ -136,32 +180,37 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@... # vX.Y.Z
+      - uses: actions/checkout@vX.Y.Z
       - run: make lint
       - run: make test
 
   build:
     needs: test
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       contents: write
       packages: write
     steps:
-      - uses: actions/checkout@... # vX.Y.Z
+      - uses: actions/checkout@vX.Y.Z
       - run: # publish images, push tags, etc.
 ```
+
+Publish the commit that passed the prerequisite checks. On tag-triggered
+releases, test the tag's commit; on dependent workflows, check out the tested
+run's head SHA. Do not resolve a moving default branch after tests finish.
 
 The same principle applies to `id-token: write` (OIDC), `pull-requests: write`,
 and any other elevation: scope it to the job that needs it, never the workflow.
 
 ### Workflow security
 
-Audit workflows with [zizmor](https://docs.zizmor.sh/), using the pedantic
-persona so it also reports hardening opportunities and not just immediately
-actionable findings. It catches much of this section for you — unpinned actions,
-overbroad `permissions`, and template injection among them.
+Audit workflows with a lockfile-aware version of
+[zizmor](https://docs.zizmor.sh/), using the pedantic persona so it also reports
+hardening opportunities and not just immediately actionable findings. It catches
+much of this section for you — unpinned actions, overbroad `permissions`, and
+template injection among them.
 
 Run it in CI with the
 [`zizmorcore/zizmor-action`](https://github.com/zizmorcore/zizmor-action).
@@ -188,12 +237,12 @@ concurrency:
 jobs:
   zizmor:
     name: zizmor
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@<commit-sha> # vX.Y.Z
+      - uses: actions/checkout@vX.Y.Z
         with:
           persist-credentials: false
-      - uses: zizmorcore/zizmor-action@<commit-sha> # vX.Y.Z
+      - uses: zizmorcore/zizmor-action@vX.Y.Z
         with:
           persona: pedantic
           advanced-security: false
@@ -202,12 +251,41 @@ jobs:
 We don't use GitHub code scanning; `advanced-security: false` skips the SARIF
 upload and makes the run fail directly on findings.
 
+### Repository settings
+
+Protect the default branch before enabling auto-merge. Require meaningful lint,
+test, build, coverage, workflow-security, and lockfile checks where applicable.
+Bind required checks to GitHub Actions and use the exact names emitted by
+successful workflow runs, including matrix suffixes. A conditionally skipped job
+can satisfy a required check; ensure path selection and aggregate jobs still
+fail when required work fails or is unexpectedly skipped.
+
+Disable up-to-date branch enforcement by default. Allow administrator bypass;
+give Renovate no bypass. Block default-branch deletion and force pushes. Keep
+workflow tokens read-only by default and disable approval of pull requests by
+workflow tokens. Elevate individual jobs only for a documented need.
+
+Inspect classic branch protection, effective rulesets, and inherited Actions
+policies before changing settings. Update the existing protection layer and
+preserve additional restrictions and intentional exceptions. Publish new
+workflows and confirm their check names before requiring them or activating
+execution policies. Read settings back after each change. Record unavailable
+features and publication-dependent changes separately from completed rollout.
+
 ## Renovate
 
 Use [Renovate](https://docs.renovatebot.com/) rather than Dependabot. Renovate
 supports grouped updates, automerge, and regex managers for non-standard
 dependency sources (Dockerfile digests, action SHAs, tool versions in
 Makefiles).
+
+Its
+[GitHub Actions manager](https://github.com/renovatebot/renovate/blob/main/lib/modules/manager/github-actions/readme.md#github-actions-lockfile-actionslock)
+regenerates existing workflow lockfiles in the same branch as action updates. It
+does not onboard new workflows. Keep digest pinning enabled for dependencies
+outside lockfile coverage, and review the workflow and lockfile changes
+together. The base preset pins the lock tool used by Renovate and updates the
+Makefile installation pin through a custom manager.
 
 Use the shared presets from this repository. Place the config in
 `.github/renovate.json5`:

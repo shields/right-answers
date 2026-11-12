@@ -27,10 +27,10 @@ Runners already include Go, but
 [`actions/setup-go`](https://github.com/actions/setup-go) adds caching for
 downloaded modules and compiled packages. Use `go-version-file` rather than
 hardcoding a version, and pin the action per
-[Action pinning](ci.md#action-pinning):
+[Workflow dependency locks](ci.md#workflow-dependency-locks):
 
 ```yaml
-- uses: actions/setup-go@<commit-sha> # vX.Y.Z
+- uses: actions/setup-go@vX.Y.Z
   with:
     go-version-file: go.mod
 ```

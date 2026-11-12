@@ -8,6 +8,22 @@
   ],
   platformAutomerge: true,
   rebaseWhen: "conflicted",
+  constraints: { ghActionsLock: "v0.4.1" },
+  customManagers: [
+    {
+      customType: "regex",
+      // Keep managerFilePatterns and slash-wrapped regexes: fileMatch is deprecated.
+      // https://docs.renovatebot.com/configuration-options/#managerfilepatterns
+      managerFilePatterns: ["/(^|/)Makefile$/", "/^renovate/base\\.json5$/"],
+      matchStringsStrategy: "any",
+      matchStrings: [
+        "gh extension install github/gh-actions-lock --pin (?<currentValue>v[\\d.]+)",
+        'ghActionsLock: "(?<currentValue>v[\\d.]+)"',
+      ],
+      datasourceTemplate: "github-releases",
+      depNameTemplate: "github/gh-actions-lock",
+    },
+  ],
   packageRules: [
     {
       description: "Automerge non-major updates",
