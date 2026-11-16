@@ -26,7 +26,7 @@ don't guess from memory):
 
 ```toml
 [toolchain]
-channel = "X.Y.Z"                  # the current stable release, fully specified
+channel = "X.Y.Z"  # the current stable release, fully specified
 components = ["clippy", "rustfmt"]
 profile = "minimal"
 ```
@@ -159,5 +159,5 @@ fn main() -> ExitCode {
 ```
 
 ```toml
-unexpected_cfgs = { level = "warn", check-cfg = ['cfg(coverage_nightly)'] }
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(coverage_nightly)"] }
 ```
