@@ -359,6 +359,8 @@ The base preset preserves these choices:
 - **`platformAutomerge`** — uses GitHub's native auto-merge, which waits for
   required checks, rather than Renovate's branch-based approach.
 - **Non-major automerge** — minor, patch, pin, and digest updates may automerge.
+- **Lock file maintenance automerge** — weekly lock file refreshes may automerge
+  after required checks pass.
 - **Dev dependency automerge includes majors** — updates matching
   `devDependencies` may automerge after required checks pass. Cooldowns still
   apply to eligible update types.

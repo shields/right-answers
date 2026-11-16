@@ -7,6 +7,7 @@
     "security:minimumReleaseAgeCrate",
   ],
   platformAutomerge: true,
+  lockFileMaintenance: { automerge: true },
   rebaseWhen: "conflicted",
   constraints: { ghActionsLock: "v0.4.1" },
   customManagers: [
