@@ -41,16 +41,34 @@ verification workflows and workflows without action dependencies.
 
 Provide these Make targets in every participating repository:
 
-| Target                      | Command                                                            |
-| --------------------------- | ------------------------------------------------------------------ |
-| `actions-lock-install`      | `gh extension install github/gh-actions-lock --pin vX.Y.Z --force` |
-| `actions-lock`              | `gh actions-lock --no-interactive`                                 |
-| `actions-lock-verify-local` | `gh actions-lock --verify-local`                                   |
-| `actions-lock-verify`       | `gh actions-lock --verify`                                         |
+| Target                      | Command                                                    |
+| --------------------------- | ---------------------------------------------------------- |
+| `actions-lock-install`      | `gh extension install github/gh-actions-lock --pin vX.Y.Z` |
+| `actions-lock`              | `gh actions-lock --no-interactive`                         |
+| `actions-lock-verify-local` | `gh actions-lock --verify-local`                           |
+| `actions-lock-verify`       | `gh actions-lock --verify`                                 |
+
+Never pass `--force` to `gh extension install`. Have `actions-lock-install`
+remove an installed extension first, and let a failed `gh extension list` or
+`gh extension remove` stop the target:
+
+```makefile
+# `gh extension install` leaves an installed extension unchanged, and `--force`
+# upgrades an out-of-date one to the latest release, unpinned. Remove it first.
+actions-lock-install:
+	installed=$$(gh extension list) && \
+		if printf '%s\n' "$$installed" | grep -q '^gh actions-lock[[:space:]]'; then gh extension remove actions-lock; fi
+	gh extension install github/gh-actions-lock --pin vX.Y.Z
+```
+
+Unlike `gh extension install`, `gh extension list` and `gh extension remove`
+require authentication, so every step that runs this target, directly or through
+`make install`, needs `GH_TOKEN`. Keep the install command on one line:
+Renovate's custom manager rewrites the version in it.
 
 Include offline coverage verification in `make lint`. Run online provenance
 verification in a separate read-only CI job named `actions-lock`, passing
-`GH_TOKEN: ${{ github.token }}` only to the step that needs it. Offline checks
+`GH_TOKEN: ${{ github.token }}` only to the steps that need it. Offline checks
 do not establish provenance. Require the online check after it has been
 published and its exact emitted name has been confirmed.
 

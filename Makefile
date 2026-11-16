@@ -27,8 +27,12 @@ fmt:
 install: actions-lock-install
 	bun install --frozen-lockfile
 
+# `gh extension install` leaves an installed extension unchanged, and `--force`
+# upgrades an out-of-date one to the latest release, unpinned. Remove it first.
 actions-lock-install:
-	gh extension install github/gh-actions-lock --pin v0.4.1 --force
+	installed=$$(gh extension list) && \
+		if printf '%s\n' "$$installed" | grep -q '^gh actions-lock[[:space:]]'; then gh extension remove actions-lock; fi
+	gh extension install github/gh-actions-lock --pin v0.4.1
 
 actions-lock:
 	gh actions-lock --no-interactive
