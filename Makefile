@@ -32,7 +32,7 @@ install: actions-lock-install
 actions-lock-install:
 	installed=$$(gh extension list) && \
 		if printf '%s\n' "$$installed" | grep -q '^gh actions-lock[[:space:]]'; then gh extension remove actions-lock; fi
-	gh extension install github/gh-actions-lock --pin v0.5.0
+	gh extension install github/gh-actions-lock --pin v0.5.1
 
 actions-lock:
 	gh actions-lock --no-interactive
