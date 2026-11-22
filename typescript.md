@@ -27,10 +27,10 @@ Install dependencies with `make install`, then run project tools with
 runtime, and disables automatic dependency installation. Bun loads TypeScript
 configuration files natively.
 
-Set `install.minimumReleaseAge = 259200` (seconds), matching Renovate's
-three-day [cooldown](ci.md#cooldowns), as the shared
-[`bunfig.toml`](bunfig.toml) does. Exempt a vetted release by exact version
-(`name@1.2.3`), not by package name.
+Match Renovate's [cooldown](ci.md#cooldowns) with
+`install.minimumReleaseAge = 259200` (seconds), as the shared
+[`bunfig.toml`](bunfig.toml) does. Exempt a vetted release as `name@1.2.3`, not
+by name.
 
 ## TypeScript 7
 

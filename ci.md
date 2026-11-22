@@ -88,9 +88,9 @@ After publishing and verifying coverage in every targeted workflow and called
 workflow, enable the **Require lockfile** execution policy. Start in Evaluate
 mode where available, scoped to participating repositories, then activate it
 after examining actual runs. It blocks uncovered workflows even when they
-contain no actions. Exclude forks and archived repositories from the rollout. If
-the account cannot use the policy, record the limitation and retain the required
-online verification check. See GitHub's
+contain no actions. Exclude forks and archived repositories from the rollout.
+The policy needs GitHub Enterprise Cloud, which our accounts lack; keep the
+required online verification check instead. See GitHub's
 [enforcement guide](https://docs.github.com/en/actions/how-tos/administer/enforce-workflow-lockfiles).
 
 ### Action sources
@@ -382,9 +382,10 @@ maintenance. Vulnerability-alert fixes bypass the cooldown by default. No
 blanket cooldown applies to other datasources; requiring timestamps from a
 source that does not provide them can block updates indefinitely.
 
-Renovate's cooldown does not cover every newly resolved transitive dependency or
-lockfile-maintenance update. Configure each package manager's own cooldown as
-well; for Bun, see [Tooling](typescript.md#tooling). See Renovate's
+Renovate's cooldown does not cover newly resolved transitive dependencies or
+lockfile maintenance, so also set the package manager's:
+[Bun](typescript.md#tooling), [uv](python.md#tooling), and
+[Cargo](rust.md#toolchain). See Renovate's
 [minimum release age documentation](https://docs.renovatebot.com/key-concepts/minimum-release-age/).
 
 ### Paid CI

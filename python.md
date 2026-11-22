@@ -21,6 +21,10 @@ limitations under the License.
 Use [uv](https://docs.astral.sh/uv/) for all Python project and package
 management. Do not use pip, pip-tools, or poetry.
 
+Match Renovate's [cooldown](ci.md#cooldowns) with `exclude-newer = "3 days"`
+under `[tool.uv]`. Exempt a vetted release with a timestamp just after its
+upload in `exclude-newer-package`, not `false`, and remove it later.
+
 Target **Python 3.15** whenever possible.
 
 ## Linting and formatting

@@ -40,6 +40,10 @@ rustup toolchain install
 
 Renovate updates the channel like action SHAs.
 
+Match Renovate's [cooldown](ci.md#cooldowns) with
+`global-min-publish-age = "3 days"` under `[registry]` in `.cargo/config.toml`.
+Cargo before 1.100 silently ignores it.
+
 ## Linting
 
 Set the `all`, `pedantic`, `nursery`, and `cargo` lint groups to `deny`, and opt
