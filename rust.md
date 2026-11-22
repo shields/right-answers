@@ -42,7 +42,7 @@ Renovate updates the channel like action SHAs.
 
 Match Renovate's [cooldown](ci.md#cooldowns) with
 `global-min-publish-age = "3 days"` under `[registry]` in `.cargo/config.toml`.
-Cargo before 1.100 silently ignores it.
+Cargo before 1.100 ignores it with only a warning.
 
 ## Linting
 
