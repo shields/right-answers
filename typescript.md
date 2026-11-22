@@ -27,6 +27,11 @@ Install dependencies with `make install`, then run project tools with
 runtime, and disables automatic dependency installation. Bun loads TypeScript
 configuration files natively.
 
+Set `install.minimumReleaseAge = 259200` (seconds), matching Renovate's
+three-day [cooldown](ci.md#cooldowns), as the shared
+[`bunfig.toml`](bunfig.toml) does. Exempt a vetted release by exact version
+(`name@1.2.3`), not by package name.
+
 ## TypeScript 7
 
 Type-check with TypeScript 7. typescript-eslint still needs the 6.0 API, so

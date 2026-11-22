@@ -383,8 +383,8 @@ blanket cooldown applies to other datasources; requiring timestamps from a
 source that does not provide them can block updates indefinitely.
 
 Renovate's cooldown does not cover every newly resolved transitive dependency or
-lockfile-maintenance update. Package-manager cooldown settings provide
-additional coverage and must be configured separately. See Renovate's
+lockfile-maintenance update. Configure each package manager's own cooldown as
+well; for Bun, see [Tooling](typescript.md#tooling). See Renovate's
 [minimum release age documentation](https://docs.renovatebot.com/key-concepts/minimum-release-age/).
 
 ### Paid CI
